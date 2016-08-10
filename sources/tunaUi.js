@@ -3,6 +3,8 @@ var $ = require ("jquery");
 module.exports = TunaUi;
 
 function TunaUi (model) {
+var self = this;
+
 var parameters = Object.keys(model.model.defaults).map (function (name) {
 var parameter = model.model.defaults[name];
 parameter.name = name;
@@ -10,13 +12,10 @@ return parameter;
 });
 
 
-this.render = function ($target) {
+self.render = function ($target) {
 $target.html (template({
-parameters: parameters,
+parameters: parameters
 
-step: function () {
-return (this.max - this.min) / 30.0;
-} // step
 }));
 
 // add event handlers
@@ -61,6 +60,6 @@ return value;
 }; // change
 
 return $target;
-}; // this.render
+}; // self.render
 
 } // TunaUi

@@ -1,8 +1,8 @@
     {
-  "name": "Tuna UI",
+  "name": "tunaUi",
   "version": "1.0.0",
   "description": "",
-  "main": "tunaUi.js",
+  "main": "sources/tunaUi.js",
   "scripts": {
     "build": "browserify --standalone TunaModel sources/tunaModel.js -o dist/tunaModel.js && browserify --standalone TunaUi sources/tunaUi.js -t  browserify-mustache sources/tunaUi.mustache  -o dist/tunaUi.js",
     "watch": "watchify sources/tunaModel.js sources/tunaUi.js tunaDemo.js  -t  browserify-mustache sources/tunaUi.mustache  -o tunaDemo.bundle.js --verbose --debug",
