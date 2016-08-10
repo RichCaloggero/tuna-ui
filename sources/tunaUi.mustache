@@ -1,0 +1,15 @@
+<div>
+<label>
+<div class="name">Bypass</div>
+<div><input type="checkbox" data-name="bypass"></div>
+</label>
+</div>
+
+<div class="parameters">
+{{#parameters}}
+<label>
+<div class="name">{{name}}</div>
+<div class="value"><input type="range" data-name="{{name}}" min="{{min}}" max="{{max}}" value="{{value}}" step=".1"></div>
+</label>
+{{/parameters}}
+</div>
