@@ -8,12 +8,13 @@ var self = this;
 var parameters = Object.keys(model.model.defaults).map (function (name) {
 var parameter = model.model.defaults[name];
 parameter.name = name;
+console.log ("- parameter: ", parameter);
 return parameter;
 });
 
 
 self.render = function ($target) {
-$target.html (template({
+$target.html (template.render({
 parameters: parameters
 
 }));
@@ -27,31 +28,34 @@ if (e.key == "0") $(e.target).val (0);
 
 setTimeout (function () {
 $(e.target).trigger ("change");
+//alert ("triggering change...");
 }, 50);
-console.log ("changing ", $(e.target).attr("data-name"));
 } // if
-return true;
+//return true;
 
 }).on ("change", "[data-name]", function (e) {
 var name = $(e.target).attr ("data-name");
 var value = Number($(e.target).val());
+console.log ("requested change: ", name, value);
 model.set (name, value);
-console.log ("set ", name, value);
 return true;
 
-}).on ("change", "[data-name=bypass]", function (e) {
+/*}).on ("change", "[data-name=bypass]", function (e) {
 model.bypass = e.target.checked;
 console.log ("bypass is ", e.target.checked);
 return true;
-});
+*/
+
+}); // events
 
 // register callback for changes to model
 model.onChange = function (name, value) {
+console.log ("responding to model change: ", name, value);
 var $parameter = $target.find (`[data-name=${name}]`);
 
-if ($parameter.val().toString() !== value.toString()) {
+if (Number($parameter.val()) !== value) {
 $parameter.val (value);
-$parameter.trigger ("change");
+//$parameter.trigger ("change");
 console.log ("set ui parameter ", name, value);
 } // if
 
@@ -61,5 +65,6 @@ return value;
 
 return $target;
 }; // self.render
+console.log ("self.render defined");
 
 } // TunaUi

@@ -1,11 +1,10 @@
-    {
-  "name": "tunaUi",
+{
+  "name": "Tuna-UI",
   "version": "1.0.0",
   "description": "",
-  "main": "sources/tunaUi.js",
   "scripts": {
-    "build": "browserify --standalone TunaModel sources/tunaModel.js -o dist/tunaModel.js && browserify --standalone TunaUi sources/tunaUi.js -t  browserify-mustache sources/tunaUi.mustache  -o dist/tunaUi.js",
-    "watch": "watchify sources/tunaModel.js sources/tunaUi.js tunaDemo.js  -t  browserify-mustache sources/tunaUi.mustache  -o tunaDemo.bundle.js --verbose --debug",
+    "build": "browserify --standalone TunaModel sources/tunaModel.js -o dist/tunaModel.js && browserify --standalone TunaUi sources/tunaUi.js -t  browserify-hogan sources/tunaUi.js -o dist/tunaUi.js",
+    "watch": "watchify sources/tunaModel.js sources/tunaUi.js tunaDemo.js  -t  browserify-hogan sources/tunaUi.js  -o tunaDemo.bundle.js --verbose --debug",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "rjc",
@@ -14,7 +13,7 @@
     "browserify": "^13.1.0",
     "browserify-mustache": "0.0.4",
     "budo": "^8.3.0",
-    "hogan.js": "^3.0.2",
+    "hogan.js": "^2.0.0",
     "jquery": "^3.1.0"
   }
 }

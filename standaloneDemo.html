@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Standalone Demo</title>
+</head>
+<body>
+<h1>Standalone Demo</h1>
+
+<div class="source">
+<label>Source: <input id="source" type="text" accesskey="s"></label>
+<audio id="player" src="../7.m4a" controls accesskey="p">
+</audio>
+</div>
+<hr>
+<div class="tuna" id="tuna">
+
+</div>
+
+
+<script src="tuna.min.js"></script>
+<script src="jquery.min.js"></script>
+<script src="dist/tunaModel.js"></script>
+<script src="dist/tunaUi.js"></script>
+
+<script>
+if (! TunaModel) alert ("TunaModel not created");
+if (! TunaUi) alert ("tunaUi not created");
+var audioElement = $("#player")[0];
+var audio = new AudioContext ();
+var source = audio.createMediaElementSource (audioElement);
+var tuna = new Tuna (audio);
+
+var reverb, ui;
+
+reverb = new TunaModel (new tuna.Convolver({impulse: "./impulse2b.wav"}));
+if (! reverb) alert ("reverb not created");
+console.log ("reverb: ", reverb);
+ui = new TunaUi (reverb);
+if (! ui) alert ("ui not created");
+if (! ui.render) alert ("ui.render not defined");
+console.log ("ui: ", ui);
+ui.render ($(".tuna"));
+reverb.set ("wetLevel", .1);
+
+source.connect (reverb.model);
+reverb.model.connect (audio.destination);
+
+//source.connect (reverb = new tuna.Convolver({impulse: "./impulse.wav"}));
+//reverb.connect (audio.destination);
+//reverb.wetLevel = .2;
+
+audioElement.play ();
+
+$(audioElement).on ("error", function (e) {
+alert ("audio error");
+}); // on error
+
+$("#source").on ("change", function (e) {
+$(audioElement).attr ("src", $(e.target).val());
+return false;
+});
+</script>
+
+</body>
+</html>
