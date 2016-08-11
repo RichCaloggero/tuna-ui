@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "browserify": "^13.1.0",
-    "browserify-mustache": "0.0.4",
+    "browserify-hogan": "^0.3.0",
     "budo": "^8.3.0",
     "hogan.js": "^2.0.0",
     "jquery": "^3.1.0"

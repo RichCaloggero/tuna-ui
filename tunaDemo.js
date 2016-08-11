@@ -22,3 +22,6 @@ $(audioElement).attr ("src", $(e.target).val());
 return false;
 });
 
+$(audioElement).on ("error", function (e) {
+alert ("audio error - " + e.message);
+});

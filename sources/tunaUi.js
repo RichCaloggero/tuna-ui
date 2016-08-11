@@ -31,12 +31,12 @@ $(e.target).trigger ("change");
 //alert ("triggering change...");
 }, 50);
 } // if
-//return true;
+return true;
 
 }).on ("change", "[data-name]", function (e) {
 var name = $(e.target).attr ("data-name");
 var value = Number($(e.target).val());
-if (name === "bypass") value = Boolean($(e.target).val());
+if (name === "bypass") value = Boolean($(e.target).prop("checked"));
 console.log ("requested change: ", name, value);
 model.set (name, value);
 return true;
