@@ -8,7 +8,7 @@ var self = this;
 var parameters = Object.keys(model.model.defaults).map (function (name) {
 var parameter = model.model.defaults[name];
 parameter.name = name;
-console.log ("- parameter: ", parameter);
+//console.log ("- parameter: ", parameter);
 return parameter;
 });
 
@@ -36,6 +36,7 @@ $(e.target).trigger ("change");
 }).on ("change", "[data-name]", function (e) {
 var name = $(e.target).attr ("data-name");
 var value = Number($(e.target).val());
+if (name === "bypass") value = Boolean($(e.target).val());
 console.log ("requested change: ", name, value);
 model.set (name, value);
 return true;
