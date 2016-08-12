@@ -2,9 +2,10 @@ var template = require ("./tunaUi.mustache");
 var $ = require ("jquery");
 module.exports = TunaUi;
 
-function TunaUi (model) {
+function TunaUi (model, title) {
 var self = this;
 
+console.log (title, Object.keys(model.model.defaults));
 var parameters = Object.keys(model.model.defaults).map (function (name) {
 var parameter = model.model.defaults[name];
 parameter.name = name;
@@ -14,6 +15,10 @@ return parameter;
 
 
 self.render = function ($target) {
+$target.empty ();
+if (! $target.attr("role")) $target.attr ("role", "region");
+if (title && !$target.attr("aria-label") && !$target.attr("aria-labelledby")) $target.attr ("aria-label", title);
+
 $target.html (template.render({
 parameters: parameters
 

@@ -7,14 +7,23 @@ var audio = new AudioContext ();
 var tuna = new Tuna (audio);
 
 var source = audio.createMediaElementSource (audioElement);
+
 var reverb = new TunaModel (new tuna.Convolver({impulse: "impulse2b.wav"}));
-ui = new TunaUi (reverb);
-ui.render ($(".tuna"));
+var reverbUi = new TunaUi (reverb, "Reverb");
+
+var chorus = new TunaModel (new tuna.Chorus());
+var chorusUi = new TunaUi (chorus);
+
+chorusUi.render ( $(".chorus") );
+reverbUi.render ( $(".reverb") );
+
 reverb.set ("wetLevel", .1);
 
-source.connect (reverb.model);
+source.connect (chorus.model);
+chorus.model.connect (reverb.model);
 reverb.model.connect (audio.destination);
-source.connect (audio.destination);
+
+// source.connect (audio.destination);
 audioElement.play ();
 
 $("#source").on ("change", function (e) {
