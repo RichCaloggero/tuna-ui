@@ -1,5 +1,6 @@
 # tuna-ui
 
+<<<<<<< HEAD
 ## Purpose
 
 I started this project to learn browserify.  Its also a fun little UI builder for a simple audio effects library called Tuna which runs in the browser using webaudio.
@@ -80,6 +81,8 @@ https://github.com/substack/node-browserify#browserify
 
 # What Does it Do
 
+=======
+>>>>>>> 2d87a6b8bf2287a5985b07f82dc99bbb29fff4bc
 Build simple UI from tuna modules:
 - all modules provide a bypass control, and a list of floating point parameters with min, max, and default value
 	+ we use this list and a simple mustache template to build a simple and accessible UI
