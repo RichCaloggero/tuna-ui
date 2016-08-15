@@ -1,4 +1,3 @@
-var TunaModel = require ("./sources/tunaModel");
 var TunaUi = require ("./sources/tunaUi");
 var $ = require ("jquery");
 
@@ -8,20 +7,21 @@ var tuna = new Tuna (audio);
 
 var source = audio.createMediaElementSource (audioElement);
 
-var reverb = new TunaModel (new tuna.Convolver({impulse: "impulse2b.wav"}));
+var reverb = new tuna.Convolver({impulse: "impulse2b.wav"});
 var reverbUi = new TunaUi (reverb, "Reverb");
 
-var chorus = new TunaModel (new tuna.Chorus());
-var chorusUi = new TunaUi (chorus);
+var eq = new tuna.GraphicEqualizer ();
+var eqUi = new TunaUi (eq, "Equalizer");
 
-chorusUi.render ( $(".chorus") );
+
 reverbUi.render ( $(".reverb") );
+eqUi.render ( $(".eq") );
 
 reverb.set ("wetLevel", .1);
 
-source.connect (chorus.model);
-chorus.model.connect (reverb.model);
-reverb.model.connect (audio.destination);
+source.connect (eq);
+eq.connect (reverb);
+reverb.connect (audio.destination);
 
 // source.connect (audio.destination);
 audioElement.play ();

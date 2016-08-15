@@ -5,9 +5,9 @@ module.exports = TunaUi;
 function TunaUi (model, title) {
 var self = this;
 
-console.log (title, Object.keys(model.model.defaults));
-var parameters = Object.keys(model.model.defaults).map (function (name) {
-var parameter = model.model.defaults[name];
+console.log (title, Object.keys(model.defaults));
+var parameters = Object.keys(model.defaults).filter (key => key !== "bypass").map (function (name) {
+var parameter = model.defaults[name];
 parameter.name = name;
 //console.log ("- parameter: ", parameter);
 return parameter;
