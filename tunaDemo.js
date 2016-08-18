@@ -1,3 +1,4 @@
+var GraphicEqualizer = require ("./sources/graphicEqualizer");
 var TunaUi = require ("./sources/tunaUi");
 var $ = require ("jquery");
 
@@ -17,7 +18,10 @@ var eqUi = new TunaUi (eq, "Equalizer");
 reverbUi.render ( $(".reverb") );
 eqUi.render ( $(".eq") );
 
-reverb.set ("wetLevel", .1);
+reverb.set ("wetLevel", .4);
+eq.set (1024, 30);
+eq.set (2048, 30);
+eq.set ("reset");
 
 source.connect (eq);
 eq.connect (reverb);

@@ -50,24 +50,7 @@
                     this._lastBypassValue = value;
                 }
             },
-            set: {
-            value: function (name, value) {
-                var setter = this.defaults[name] && this.defaults[name].function;
-                if (setter && setter instanceof Function) {
-if (setter.call (this, name, value)) {
-if (this.onChange && this.onChange instanceof Function) this.onChange.call (this, name, value);
-} // if changed
-return;
-                } // if
-
-if (this[name] !== value) {
-                this[name] = value;
-                console.log ("tunaModel.set: ", name, value);
-                if (this.onChange && this.onChange instanceof Function) this.onChange.call (this, name, value);
-                } // if changed
-            } //             function
-            }, // set
-
+            
             connect: {
                 value: function(target) {
                     this.output.connect(target);
@@ -161,7 +144,7 @@ if (this[name] !== value) {
             throw new Error("Tuna cannot initialize because this environment does not support web audio.");
         }
         connectify(context);
-        userContext = context;
+        Super.context = userContext = context;
         userInstance = this;
     }
 
@@ -234,103 +217,7 @@ if (this[name] !== value) {
         return userVal === undefined ? defaultVal : userVal;
     }
 
-Tuna.prototype.GraphicEqualizer = function GraphicEqualizer (properties) {
-if (!properties) {
-properties = this.getDefaults();
-}
-
-this.input = userContext.createGain ();
-this.output = userContext.createGain ();
-this.activateNode = this.inputGain = userContext.createGain();
-this.outputGain = userContext.createGain ();
-this.bypass = properties.bypass || false;
-
-var bands = [];
-
-bands = init.call (this);
-this.input.connect (this.inputGain);
-this.outputGain.connect (this.output);
-
-// add properties to defaults for UI generator
-bands.forEach (function (band) {
-this.defaults[band.frequency] = {
-value: 0.0,
-min: properties.bandMinGain || -30.0,
-max: properties.bandMaxGain || 30.0,
-step: 1.0,
-function: setBand.bind(this),
-type: "float"
-};
-}, this);
-
-console.log ("GraphicEqualizer initialized with ", bands.length, " bands");
-
-function setBand (name, value) {
-console.log ("want to set band ", name, " to ", value);
-var band = bands.find (function (band) {return band.frequency === Number(name);});
-if (! band) throw new Error (`invalid band: ${name}`);
-
-if (band.gain !== value) {
-band.gain = value;
-band.filter.gain.value = value;
-return true;
-} // if
-
-return false;
-} // setBand
-
-function init () {
-var frequency = properties.minFrequency || 32;
-var bandCount = properties.bandCount || 10;
-this.Q = properties.Q || 1.0;
-this.outputGain.gain.value = 1/bandCount;
-console.log ("outputGain: ", this.output.gain.value);
-
-if (! bands || bands.length === 0) {
-bands = [];
-for (var i=0; i<bandCount; i++) {
-bands.push ({
-frequency: frequency,
-gain: 0.0
-}); // band
-frequency *= 2;
-} // for
-} // if
-
-bands.forEach (function (band) {
-var filter = userContext.createBiquadFilter ();
-filter.type = "peaking";
-filter.Q.value = this.Q;
-filter.frequency.value = band.frequency;
-filter.gain.value = band.gain;
-this.inputGain.connect (filter);
-filter.connect (this.outputGain);
-band.filter = filter;
-}, this); // map over bands
-
-return bands;
-} // init
-
-}; // GraphicEqualizer constructor
-
-Tuna.prototype.GraphicEqualizer.prototype = Object.create(Super, {
-name: {value: "GraphicEqualizer"},
-defaults: {
-writable: true,
-value: {
-q: {
-value: 1.83,
-min: 0.001,
-max: 20.0,
-automatable: true,
-type: FLOAT
-}, // Q defaults
-} // defaults.value
-}, // defaults
-
-// actual instance properties
-
-}); // GraphicEqualizer.prototype
+Tuna.Super = Super;
 
     Tuna.prototype.Bitcrusher = function(properties) {
         if (!properties) {

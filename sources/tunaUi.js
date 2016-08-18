@@ -2,6 +2,24 @@ var template = require ("./tunaUi.mustache");
 var $ = require ("jquery");
 module.exports = TunaUi;
 
+Tuna.Super.set = function (name, value) {
+var setter = (this.defaults[name] && this.defaults[name].function)
+|| (this[name]);
+console.log ("setter: ", name, setter);
+if (setter && setter instanceof Function) {
+if (setter.call (this, name, value)) {
+if (this.onChange && this.onChange instanceof Function) this.onChange.call (this, name, value);
+} // if changed
+return;
+} // if
+
+if (this[name] !== value) {
+this[name] = value;
+console.log ("tunaModel.set: ", name, value);
+if (this.onChange && this.onChange instanceof Function) this.onChange.call (this, name, value);
+} // if changed
+}; //             function
+
 function TunaUi (model, title) {
 var self = this;
 
@@ -38,7 +56,13 @@ $(e.target).trigger ("change");
 } // if
 return true;
 
-}).on ("change", "[data-name]", function (e) {
+}).on ("click", "button, [type=button]", function (e) {
+var name = $(e.target).attr ("data-name");
+console.log ("click: ", name);
+model.set (name, undefined);
+return true;
+
+}).on ("change", "[type=range][data-name]", function (e) {
 var name = $(e.target).attr ("data-name");
 var value = Number($(e.target).val());
 if (name === "bypass") value = Boolean($(e.target).prop("checked"));
@@ -71,6 +95,7 @@ return value;
 
 return $target;
 }; // self.render
-console.log ("self.render defined");
+//console.log ("self.render defined");
+
 
 } // TunaUi
