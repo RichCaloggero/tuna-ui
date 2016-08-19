@@ -104,6 +104,13 @@ automatable: true,
 function: this.reset,
 }, // reset
 
+bypass: {
+controlType: "checkbox",
+automatable: true,
+function: this.bypass,
+type: "boolean"
+}, // bypass
+
 q: {
 controlType: "range",
 value: 1.83,

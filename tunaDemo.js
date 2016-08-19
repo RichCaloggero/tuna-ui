@@ -12,7 +12,7 @@ var eq = new tuna.GraphicEqualizer ();
 var eqUi = new TunaUi (eq, "Equalizer");
 eqUi.render ( $(".eq") );
 
-var reverb = new tuna.Convolver({impulse: "impulse2b.wav"});
+var reverb = new tuna.Convolver({impulse: "impulse2b.wav", bypass: false});
 var reverbUi = new TunaUi (reverb, "Reverb");
 reverbUi.render ( $(".reverb") );
 
