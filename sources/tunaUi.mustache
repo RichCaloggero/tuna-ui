@@ -1,15 +1,12 @@
-<div>
-<label>
-<div class="name">Bypass</div>
-<div><input type="checkbox" data-name="bypass"></div>
-</label>
-</div>
+{{#groups}}
+<div  class="group">
 
-<div class="parameters">
 {{#parameters}}
 <label>
 <div class="name">{{name}}</div>
 <div class="value"><input type="{{controlType}}" data-name="{{name}}" min="{{min}}" max="{{max}}" value="{{value}}" step="{{step}}"></div>
 </label>
 {{/parameters}}
+
 </div>
+{{/groups}}

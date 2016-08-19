@@ -27,6 +27,7 @@ max: properties.bandMaxGain || 30.0,
 step: 1.0,
 orientation: "vertical",
 function: setBand.bind(this),
+group: 1,
 type: "float"
 };
 }, this);

@@ -8,15 +8,13 @@ var tuna = new Tuna (audio);
 
 var source = audio.createMediaElementSource (audioElement);
 
-var reverb = new tuna.Convolver({impulse: "impulse2b.wav"});
-var reverbUi = new TunaUi (reverb, "Reverb");
-
 var eq = new tuna.GraphicEqualizer ();
 var eqUi = new TunaUi (eq, "Equalizer");
-
-
-reverbUi.render ( $(".reverb") );
 eqUi.render ( $(".eq") );
+
+var reverb = new tuna.Convolver({impulse: "impulse2b.wav"});
+var reverbUi = new TunaUi (reverb, "Reverb");
+reverbUi.render ( $(".reverb") );
 
 reverb.set ("wetLevel", .4);
 eq.set (1024, 30);
