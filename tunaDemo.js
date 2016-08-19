@@ -13,6 +13,12 @@ var eqUi = new TunaUi (eq, "Equalizer");
 eqUi.render ( $(".eq") );
 
 var reverb = new tuna.Convolver({impulse: "impulse2b.wav", bypass: false});
+
+// hack to fix grouping
+reverb.defaults.lowCut.group = reverb.defaults.highCut.group = 0;
+reverb.defaults.dryLevel.group = reverb.defaults.wetLevel.group = 1;
+reverb.defaults.level.group = 2;
+
 var reverbUi = new TunaUi (reverb, "Reverb");
 reverbUi.render ( $(".reverb") );
 

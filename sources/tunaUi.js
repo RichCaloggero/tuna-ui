@@ -29,7 +29,8 @@ console.log (title, Object.keys(model.defaults));
 
 // add bypass if not present
 if (! model.defaults.bypass) model.defaults.bypass = {
-name: "bypass", controlType: "checkbox", type: "boolean"
+name: "bypass", controlType: "checkbox", type: "boolean",
+function: model.bypass
 };
 
 
@@ -37,6 +38,12 @@ var parameters = Object.keys(model.defaults).map (function (name) {
 var parameter = model.defaults[name];
 parameter.name = name;
 parameter.group = parameter.group || 0;
+parameter.step = parameter.step || .1;
+if (! parameter.controlType) {
+if (! parameter.type) {parameter.controlType = "text";}
+else if (parameter.type == "float" || !Number.isNaN(parameter.value)) {parameter.controlType = "range"}
+else if (parameter.type === "boolean") {parameter.controlType = "checkbox"}
+} // if
 //console.log (`- parameter ${parameter.name} in group ${parameter.group}`);
 return parameter;
 });
@@ -89,10 +96,15 @@ console.log ("click: ", name);
 model.set (name, undefined);
 return true;
 
+}).on ("click", "[type=checkbox]", function (e) {
+var name = $(e.target).attr ("data-name");
+console.log ("click checkbox: ", name);
+model.set (name, e.target.checked);
+return true;
+
 }).on ("change", "[type=range][data-name]", function (e) {
 var name = $(e.target).attr ("data-name");
 var value = Number($(e.target).val());
-if (name === "bypass") value = Boolean($(e.target).prop("checked"));
 console.log ("requested change: ", name, value);
 model.set (name, value);
 return true;
