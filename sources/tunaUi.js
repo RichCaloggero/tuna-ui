@@ -2,6 +2,12 @@ var template = require ("./tunaUi.mustache");
 var $ = require ("jquery");
 module.exports = TunaUi;
 
+/* function to set a property:
+- if its a function on the object, call it with name and value
+- if the default property definition contains a function property, use its value instead
+- otherwise, we assume its just a normal object property to which one can assign a value
+*/
+
 Tuna.Super.set = function (name, value) {
 var setter = (this.defaults[name] && this.defaults[name].function)
 || (this[name]);
