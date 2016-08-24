@@ -1,8 +1,5 @@
 Tuna.prototype.StereoSpread = function StereoSpread (properties) {
-<<<<<<< HEAD
 var self = this;
-=======
->>>>>>> 1991d951dc12577a4abd149a399ac2aff3dfba37
 var mix, frequency, Q;
 var invertLeft, invertRight, fLeft, fRight, passThrough, split, merge;
 if (!properties) {
@@ -19,24 +16,18 @@ this.bypass = properties.bypass || false;
 this.input.connect (this.inputGain);
 this.outputGain.connect (this.output);
 
-<<<<<<< HEAD
-=======
 // add properties to defaults for UI generator
 
 init.call (this);
 console.log ("stereoSpread initialized");
->>>>>>> 1991d951dc12577a4abd149a399ac2aff3dfba37
 
 // public methods
 this.mix = setMix.bind(this);
 this.frequency = setFrequency.bind(this);
 this.Q = setQ.bind(this);
 
-<<<<<<< HEAD
 init.call (this);
 console.log ("stereoSpread initialized");
-=======
->>>>>>> 1991d951dc12577a4abd149a399ac2aff3dfba37
 
 // private methods
 
@@ -45,13 +36,10 @@ if (mix === value) return false;
 
 mix = value;
 invertLeft.gain.value = invertRight.gain.value = -1*mix;
-<<<<<<< HEAD
 self.outputGain.gain.value = 1 + 0.5*mix;
 console.log (`setMix: ${mix} ${self.outputGain.gain.value} ${passThrough.gain.value} ${invertLeft.gain.value} ${invertRight.gain.value}`);
-=======
 passThrough.gain.value = 1 + 0.5*mix;
 console.log (`setMix: ${mix} ${passThrough.gain.value} ${invertLeft.gain.value} ${invertRight.gain.value}`);
->>>>>>> 1991d951dc12577a4abd149a399ac2aff3dfba37
 return true;
 } // setMix
 
