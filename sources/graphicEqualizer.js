@@ -36,13 +36,20 @@ console.log ("GraphicEqualizer initialized with ", bands.length, " bands");
 
 // public methods
 
-this.reset = reset;
+this.reset = reset.bind(this);
+this.Q = setQ.bind(this);
 
 // private methods
 
 function reset () {
 for (var band of bands) this.set(band.frequency, 0);
+return true;
 } // reset
+
+function setQ (name, value) {
+for (var band of bands) band.filter.Q.value = value;
+return true;
+} // setQ
 
 function setBand (name, value) {
 console.log ("want to set band ", name, " to ", value);
@@ -111,7 +118,7 @@ function: this.bypass,
 type: "boolean"
 }, // bypass
 
-q: {
+Q: {
 controlType: "range",
 value: 1.83,
 min: 0.001,
