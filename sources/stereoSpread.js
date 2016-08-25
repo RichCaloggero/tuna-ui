@@ -18,8 +18,6 @@ this.outputGain.connect (this.output);
 
 // add properties to defaults for UI generator
 
-init.call (this);
-console.log ("stereoSpread initialized");
 
 // public methods
 this.mix = setMix.bind(this);

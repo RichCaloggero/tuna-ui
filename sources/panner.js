@@ -9,7 +9,8 @@ this.activateNode = audio.createGain();
 this.inputGain = audio.createGain();
 this.outputGain = audio.createGain ();
 
-this.input.connect (this.inputGain);
+this.input.connect (this.activateNode);
+this.activateNode.connect (this.inputGain);
 this.outputGain.connect (this.output);
 
 
@@ -37,7 +38,8 @@ return true;
 
 function init () {
 panner = audio.createPanner ();
-this.inputGain.connect (panner).connect (this.outputGain);
+this.inputGain.connect (panner);
+panner.connect (this.outputGain);
 setPosition ("position", [0,0,0]);
 
 } // init
@@ -76,9 +78,8 @@ position: {
 controlType: "text",
 value: [0,0,0],
 automatable: true,
-type: "string"
+type: "float"
 }, // position defaults
-
 } // defaults.value
 }, // defaults
 
