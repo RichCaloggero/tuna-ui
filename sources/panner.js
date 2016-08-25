@@ -30,7 +30,8 @@ function getPosition () {return position;}
 function setPosition (name, value) {
 if (distance (position,  value) < epselon) return false;
 
-position = value.slice();
+position = value;
+panner.setPosition.apply (this, position);
 console.log (`setPosition: ${position}`);
 return true;
 } // setPosition
@@ -38,9 +39,12 @@ return true;
 
 function init () {
 panner = audio.createPanner ();
+panner.panningModel = "HRTF";
+listener = audio.listener;
+listener.setPosition (0, epselon, 0);
 this.inputGain.connect (panner);
 panner.connect (this.outputGain);
-setPosition ("position", [0,0,0]);
+setPosition ("position", [0,22,-10]);
 
 } // init
 
