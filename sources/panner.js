@@ -1,4 +1,11 @@
-var epselon = 2 * Number.EPSILON;
+var epsilon = Number.EPSILON;
+var pannerOptions = {
+panningModel: "HRTF",
+distanceModel: "linear",
+refDistance: 10,
+maxDistance: 100,
+rolloffFactor: .1
+}; // pannerOptions
 
 Tuna.prototype.Panner = function Panner () {
 var panner, listener, position = [0,0,0];
@@ -28,10 +35,11 @@ console.log ("Panner initialized");
 function getPosition () {return position;}
 
 function setPosition (name, value) {
-if (distance (position,  value) < epselon) return false;
+console.log ("setting position ", value, position, distance(position,value));
+if (distance (position,  value) < epsilon) return false;
 
 position = value;
-panner.setPosition.apply (this, position);
+panner.setPosition.apply (panner, position);
 console.log (`setPosition: ${position}`);
 return true;
 } // setPosition
@@ -39,21 +47,24 @@ return true;
 
 function init () {
 panner = audio.createPanner ();
-panner.panningModel = "HRTF";
+for (var option in pannerOptions) {
+panner[option] = pannerOptions[option];
+} // for
 listener = audio.listener;
-listener.setPosition (0, epselon, 0);
+listener.setPosition (0, epsilon, 0);
+listener.setOrientation (0,0,1, 0,1,0);
 this.inputGain.connect (panner);
 panner.connect (this.outputGain);
-setPosition ("position", [0,22,-10]);
+setPosition ("position", [0,0,0]);
 
 } // init
 
 function distance (p1, p2) {
-return Math.sqrt (
-Math.pow (p2[0]-p1[0], 2)
-+ Math.pow (p2[1]-p1[1], 2)
-+ Math.pow (p2[2]-p1[2], 2)
-);
+var dx = p2[0]-p1[0];
+var dy = p2[1]-p1[1];
+var dz = p2[2]-p1[2];
+
+return Math.sqrt (dx*dx + dy*dy + dz*dz);
 } // distance
 
 function randomFloat (min, max) {

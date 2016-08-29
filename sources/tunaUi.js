@@ -9,9 +9,12 @@ module.exports = TunaUi;
 */
 
 Tuna.Super.set = function (name, value) {
-var setter = (this.defaults[name] && this.defaults[name].function)
-|| (this[name]);
+var setter = (
+(this.defaults[name] && this.defaults[name].function)
+|| (this[name])
+);
 console.log ("setter: ", name, value, setter);
+
 if (setter && setter instanceof Function) {
 console.log ("- calling ", setter);
 if (setter.call (this, name, value)) {
@@ -46,13 +49,15 @@ var parameters = Object.keys(model.defaults).map (function (name) {
 var parameter = model.defaults[name];
 parameter.name = name;
 parameter.group = parameter.group || 0;
-if (parameter.type === "float") parameter.step = parameter.step || .1;
 if (! parameter.type) parameter.type = "string";
+
 if (! parameter.controlType) {
 if (parameter.type == "float" || !Number.isNaN(parameter.value)) {parameter.controlType = "range";}
 else if (parameter.type === "boolean") {parameter.controlType = "checkbox";}
 else if (parameter.type === "string") {parameter.controlType = "text";}
 } // if
+
+if (parameter.type === "float" && parameter.controlType === "range") parameter.step = parameter.step || .1;
 //console.log (`- parameter ${parameter.name} in group ${parameter.group}`);
 return parameter;
 });
@@ -90,28 +95,6 @@ $(e.target).trigger ("change");
 }, 50);
 return false;
 } // if
-return true;
-
-}).on ("keydown", "[type=text][data-type=float]", function (e) {
-var key = e.keyCode;
-
-/*if (e.key === "0"
- //|| (key >= 35 && key <= 40)
-) {
-if (e.key == "0") $(e.target).val ("[0,0,0]");
-
-switch (key) {
-
-} // switch key
-
-setTimeout (function () {
-$(e.target).trigger ("change");
-//alert ("triggering change...");
-}, 50);
-return false;
-} // if
-*/
-
 return true;
 
 }).on ("click", "button, [type=button]", function (e) {
