@@ -25,7 +25,7 @@ value: 0.0,
 min: properties.bandMinGain || -30.0,
 max: properties.bandMaxGain || 30.0,
 step: 1.0,
-orientation: 'orient="vertical"',
+orientation: "vertical",
 function: setBand.bind(this),
 group: 1,
 type: "float"
@@ -47,12 +47,13 @@ return true;
 } // reset
 
 function setQ (name, value) {
+console.log ("graphicEqualizer: setting Q to ", value);
 for (var band of bands) band.filter.Q.value = value;
 return true;
 } // setQ
 
 function setBand (name, value) {
-console.log ("want to set band ", name, " to ", value);
+console.log ("graphicEqualizer: request to set band ", name, " to ", value);
 var band = bands.find (function (band) {return band.frequency === Number(name);});
 if (! band) throw new Error (`invalid band: ${name}`);
 

@@ -35,10 +35,10 @@ console.log ("Panner initialized");
 function getPosition () {return position;}
 
 function setPosition (name, value) {
-console.log ("setting position ", value, position, distance(position,value));
+console.log ("setting position ", typeof(value), value, typeof(position), position, distance(position,value));
 if (distance (position,  value) < epsilon) return false;
 
-position = value;
+position = value.slice(); // need to copy
 panner.setPosition.apply (panner, position);
 console.log (`setPosition: ${position}`);
 return true;
@@ -46,6 +46,9 @@ return true;
 
 
 function init () {
+var splitter = audio.createChannelSplitter ();
+var monoMix = audio.createGain();
+
 panner = audio.createPanner ();
 for (var option in pannerOptions) {
 panner[option] = pannerOptions[option];
@@ -53,10 +56,16 @@ panner[option] = pannerOptions[option];
 listener = audio.listener;
 listener.setPosition (0, epsilon, 0);
 listener.setOrientation (0,0,1, 0,1,0);
-this.inputGain.connect (panner);
-panner.connect (this.outputGain);
-setPosition ("position", [0,0,0]);
+panner.setOrientation (0,0,0);
 
+this.inputGain.connect (splitter);
+splitter.connect (monoMix, 0);
+splitter.connect (monoMix, 1);
+monoMix.connect (panner);
+panner.connect (this.outputGain);
+
+console.log ("panner: ", panner);
+setPosition ("position", [0,0,0]);
 } // init
 
 function distance (p1, p2) {

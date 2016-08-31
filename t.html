@@ -2,16 +2,22 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Hogan Demo</title>
-
+<title>Test</title>
+<script src="jquery.min.js"></script>
 </head>
 <body>
-<h1>Hogan Demo!</h1>
 
-<div class="t">
-</div>
-
-<script src="t.bundle.js"></script>
+<label>
+<div class="name">Q</div>
+<div class="value"><input type="range" step="0.1" value="1.83" max="20.0" min="0.1" data-type="float" data-name="Q"></div>
+</label>
+<label>
+<div class="name">32</div>
+<div class="value"><input type="range" step="1" value="0" max="30" min="-30" data-type="float" data-name="32"></div>
+</label>
+<script>
+$("[data-name=Q]").val(2.0);
+</script>
 
 </body>
 </html>

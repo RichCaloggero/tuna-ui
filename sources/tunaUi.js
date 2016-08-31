@@ -1,6 +1,29 @@
+var changeDelay = 0; // milliseconds
 var template = require ("./tunaUi.mustache");
 var $ = require ("jquery");
 module.exports = TunaUi;
+
+function isFunction (f) {
+return f && (f instanceof Function);
+} // isFunction
+
+function hasChanged ($parameter, modelValue) {
+var type = $parameter.attr("type") || "text";
+
+switch (type) {
+case "text": return $parameter.val().toString() !== modelValue.toString();
+
+case "checkbox": return ($parameter.prop("checked") !== !!value);
+
+case "range": return (Number($parameter.val()) !== Number(modelValue));
+
+default: console.log ("unsupported type: ", type);
+return false;
+} // switch
+
+console.error ("should never get here");
+return false;
+} // hasChanged
 
 /* function to set a property:
 - if its a function on the object, call it with name and value
@@ -9,34 +32,54 @@ module.exports = TunaUi;
 */
 
 Tuna.Super.set = function (name, value) {
+var parameters = this.defaults[name];
 var setter = (
+(isFunction (parameters.function) && parameters.function)
+|| (isFunction (this[name]) && this[name])
+);
+
+/*var setter = (
 (this.defaults[name] && this.defaults[name].function)
 || (this[name])
 );
-console.log ("setter: ", name, value, setter);
+*/
 
-if (setter && setter instanceof Function) {
-console.log ("- calling ", setter);
+//console.log ("setter: ", name, value, setter);
+
+if (isFunction (setter)) {
+//console.log ("- calling ", setter);
+
 if (setter.call (this, name, value)) {
-if (this.onChange && this.onChange instanceof Function) this.onChange.call (this, name, value);
-console.log ("- change callback fired...");
-} // if changed
-return;
-} // if
 
+if (isFunction (this.onChange)) {
+this.onChange.call (this, name, value);
+//console.log ("- change callback fired...");
+} // if onChange
+
+return true;
+} // if model changed
+
+return false;
+} // if setter is a function 
+
+// now try name
 if (this[name] !== value) {
 this[name] = value;
-console.log ("- set property ", name, value);
-if (this.onChange && this.onChange instanceof Function) this.onChange.call (this, name, value);
+//console.log ("- set property ", name, value);
+if (isFunction (this.onChange)) this.onChange.call (this, name, value);
+return true;
 } // if changed
-}; //             function
+
+return false;
+}; //             Tuna.Super.set
 
 
 function TunaUi (model, title) {
 var self = this;
 var group = 0, groups = [];
+var changeTimeout = null;
 
-console.log (title, Object.keys(model.defaults));
+//console.log (title, Object.keys(model.defaults));
 
 // add bypass if not present
 if (! model.defaults.bypass) model.defaults.bypass = {
@@ -80,86 +123,100 @@ if (title && !$target.attr("aria-label") && !$target.attr("aria-labelledby")) $t
 $target.html (template.render({
 groups: groups.filter((x) => typeof(x) !== "undefined")
 }));
-console.log (`rendered ${title}, ${parameters.length} parameters in ${groups.length} groups`);
+//console.log (`rendered ${title}, ${parameters.length} parameters in ${groups.length} groups`);
 
 // add event handlers
 $target.on ("keydown", "[type=range]", function (e) {
 var key = e.keyCode;
 
 if (e.key === "0" || (key >= 35 && key <= 40)) {
-if (e.key == "0") $(e.target).val (0);
+if (e.key === "0") $(e.target).val (0);
 
 setTimeout (function () {
 $(e.target).trigger ("change");
 //alert ("triggering change...");
-}, 50);
-return false;
+}, 80);
+return true;
 } // if
 return true;
 
 }).on ("click", "button, [type=button]", function (e) {
 var name = $(e.target).attr ("data-name");
-console.log ("click button: ", name);
+//console.log ("click button: ", name);
 model.set (name, undefined);
-return true;
+return false;
 
 }).on ("click", "[type=checkbox]", function (e) {
 var name = $(e.target).attr ("data-name");
-console.log ("click checkbox: ", name);
+//console.log ("click checkbox: ", name);
 model.set (name, e.target.checked);
 return true;
 
-}).on ("change", "[type=range][data-name]", function (e) {
+}).on ("change", "[type=range]", function (e) {
 var $parameter = $(e.target);
-var name = $(e.target).attr ("data-name");
+var name = $parameter.attr ("data-name");
 var value = Number($parameter.val());
 
-console.log ("requested numberic value change: ", name, value);
+//console.log ("requested numeric value change: ", name, value);
 model.set (name, value);
-return true;
+return false;
 
-}).on ("change", "[type=text][data-name]", function (e) {
+}).on ("change", "[type=text]", function (e) {
 var $parameter = $(e.target);
 var name = $(e.target).attr ("data-name");
-var value = getUiValue (name, $parameter.val());
+var value = processUiStringValue (name, $parameter.val());
 
-console.log ("requested text value change: ", name, value);
+//console.log ("requested text value change: ", name, value);
 model.set (name, value);
-return true;
+return false;
 
 }); // events
 
 // register callback for changes to model
 model.onChange = function (name, value) {
-console.log ("responding to model change: ", name, value);
 var $parameter = $target.find (`[data-name=${name}]`);
+var type = ($parameter.attr("type"))? $parameter.attr("type") : "text";
 
-if ($parameter.attr("type") === "checkbox") {
-if ($parameter.prop("checked") !== !!value) {
+//if (changeTimeout) {
+//clearTimeout (changeTimeout);
+//changeTimeout = null;
+//} // if
+
+//changeTimeout = setTimeout (function () {
+console.log ("responding to model change: ", name, value, type, $parameter.val());
+
+if (type === "text" && $parameter.val() !== value.toString()) {
+$parameter.val(value.toString());
+console.log ("set string UI parameter", name, value);
+return true;
+} // if
+
+if (type === "checkbox" && $parameter.prop("checked") !== !!value) {
 $parameter.prop ("checked", !!value);
 console.log ("set checkbox ", name, !!value);
+return true;
 } // if
 
-} else {
-if (Number($parameter.val()) !== value) {
-$parameter.val (value);
-//$parameter.trigger ("change");
-console.log ("set ui parameter ", name, value);
+if (type === "range"  && Number($parameter.val()) !== Number(value)) {
+$parameter.val (Number(value));
+console.log ("set numeric ui parameter ", name, value);
+return true;
 } // if
-} // if
+
+return false;
+//}, changeDelay);
 
 return value;
-}; // change
+}; // onChange
 
 return $target;
 
 
-function getUiValue (name, value) {
+function processUiStringValue (name, value) {
+if (! name) throw new Error("getUiValue: name is null");
 var parameter = parameters.find ((x) => x.name && x.name === name);
 var type = (parameter)? parameter.type : "string";
-console.log (`getUiValue: ${name} ${type}`);
-
-value = value.trim();
+//console.log (`getUiValue: ${name} ${type}`);
 
 return maybeGetArray (value, type);
 } // getUiValue
@@ -188,5 +245,6 @@ if (s1>s2) return 1;
 if (s1<s2) return -1;
 return 0;
 } // compareStrings
+
 
 } // TunaUi
