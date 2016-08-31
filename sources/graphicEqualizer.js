@@ -25,7 +25,8 @@ value: 0.0,
 min: properties.bandMinGain || -30.0,
 max: properties.bandMaxGain || 30.0,
 step: 1.0,
-orientation: "vertical",
+orientation: "vertical", // not currently used
+orient: 'orient="vertical"', // for firefox
 function: setBand.bind(this),
 group: 1,
 type: "float"
