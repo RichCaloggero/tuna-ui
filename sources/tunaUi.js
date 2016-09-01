@@ -7,28 +7,14 @@ function isFunction (f) {
 return f && (f instanceof Function);
 } // isFunction
 
-function hasChanged ($parameter, modelValue) {
-var type = $parameter.attr("type") || "text";
-
-switch (type) {
-case "text": return $parameter.val().toString() !== modelValue.toString();
-
-case "checkbox": return ($parameter.prop("checked") !== !!value);
-
-case "range": return (Number($parameter.val()) !== Number(modelValue));
-
-default: console.log ("unsupported type: ", type);
-return false;
-} // switch
-
-console.error ("should never get here");
-return false;
-} // hasChanged
 
 /* function to set a property:
+- if the default property definition contains a function property, call it with name and value
 - if its a function on the object, call it with name and value
-- if the default property definition contains a function property, use its value instead
 - otherwise, we assume its just a normal object property to which one can assign a value
+
+if the setter function return false, no change took place, and we're done.
+Otherwise, if there is an "onChange" property on the model, call it with name and value. Generally this will be defined via the render function inside the tunaUi object. It will set the UI element whose data-name attribute matches name to value if its not already set to that value.
 */
 
 Tuna.Super.set = function (name, value) {
@@ -206,8 +192,16 @@ return true;
 return false;
 //}, changeDelay);
 
-return value;
 }; // onChange
+
+// register callback called when model is bypassed; used to disable controls.
+
+model.activateCallback = function (active) {
+var $controls = $target.find ("[data-name]").not ("[data-name=bypass]");
+console.log ("- activateCallback: ", active, ", found ", $controls.length);
+if (!active) $controls.attr ("disabled", "true");
+else $controls.removeAttr ("disabled");
+}; // model.activateCallback
 
 return $target;
 

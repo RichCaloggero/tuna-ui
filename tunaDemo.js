@@ -125,11 +125,17 @@ return p;
 }); // arrow keys change position
 
 // connect graph
-source.connect (eq);
+source.connect (eq)
+.connect (panner)
+.connect (spread)
+.connect (reverb)
+.connect (audio.destination);
+/*source.connect (eq);
 eq.connect (panner);
 panner.connect (spread);
 spread.connect (reverb);
 reverb.connect (audio.destination);
+*/
 
 // source.connect (audio.destination);
 audioElement.play ();

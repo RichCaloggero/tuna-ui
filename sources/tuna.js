@@ -29,12 +29,15 @@
                         this.input.disconnect();
                         this.input.connect(this.activateNode);
                         if (this.activateCallback) {
-                            this.activateCallback(doActivate);
+                            this.activateCallback(true);
                         }
                     } else {
                         this.input.disconnect();
                         this.input.connect(this.output);
-                    }
+                    if (this.activateCallback) {
+                            this.activateCallback(false);
+                        }
+                    } 
                 }
             },
             bypass: {
@@ -53,12 +56,12 @@
             
             connect: {
                 value: function(target) {
-                    this.output.connect(target);
+                    return this.output.connect(target);
                 }
             },
             disconnect: {
                 value: function(target) {
-                    this.output.disconnect(target);
+                    return this.output.disconnect(target);
                 }
             },
             connectInOrder: {
