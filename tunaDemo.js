@@ -1,6 +1,6 @@
 var delta = 0.1;
 var GraphicEqualizer = require ("./sources/graphicEqualizer");
-var StereoSpread = require ("./sources/stereoSpread");
+var StereoSpread = require ("./sources/stereoSpread-delay");
 var Panner = require ("./sources/panner");
 var TunaUi = require ("./sources/tunaUi");
 var $ = require ("jquery");
