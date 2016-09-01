@@ -1,4 +1,5 @@
 var delta = 0.1;
+var path = null;
 var GraphicEqualizer = require ("./sources/graphicEqualizer");
 var StereoSpread = require ("./sources/stereoSpread-delay");
 var Panner = require ("./sources/panner");
@@ -12,12 +13,9 @@ var tuna = new Tuna (audio);
 
 var source = audio.createMediaElementSource (audioElement);
 
-var monoMix = audio.createGain();
-var splitter = audio.createChannelSplitter ();
 var panner = new tuna.Panner ();
 var pannerUi = new TunaUi (panner, "3d Panner");
 pannerUi.render ( $(".panner") );
-
 
 var spread = new tuna.StereoSpread ();
 var spreadUi = new TunaUi (spread, "Stereo Spread");
@@ -28,23 +26,28 @@ var eqUi = new TunaUi (eq, "Equalizer");
 eqUi.render ( $(".eq") );
 
 var reverb = new tuna.Convolver({impulse: "impulse2b.wav", bypass: false});
-
 // hack to fix grouping
 reverb.defaults.lowCut.group = reverb.defaults.highCut.group = 0;
 reverb.defaults.dryLevel.group = reverb.defaults.wetLevel.group = 1;
 reverb.defaults.level.group = 2;
-
 var reverbUi = new TunaUi (reverb, "Reverb");
 reverbUi.render ( $(".reverb") );
 
-
+// set parameters
 eq.set ("bypass", true);
-spread.set ("bypass", true);
-reverb.set ("bypass", true);
+eq.set ("Q", 1.8);
 
-panner.set ("position", [0,0,-10]);
-eq.set ("Q", 2.0);
+reverb.set ("bypass", true);
 reverb.set ("wetLevel", .3);
+
+spread.set ("mix", 0.55);
+spread.set ("delay", 0.00024);
+
+panner.set ("position", [31.2,0,-24.3]);
+
+
+// stop any panimations
+$(audioElement).on ("ended", function () {if (path) path = clearInterval (path);});
 
 // keyboard control for position
 $(".panner [data-name=position]")
@@ -52,6 +55,13 @@ $(".panner [data-name=position]")
 .on ("keydown", function (e) {
 var key = e.key;
 var position = $(e.target).val().split(",").map ((x) => Number(x));
+
+if (e.key.toLowerCase() === "c") {
+if (e.shiftKey && path) path = clearInterval (path);
+else if (! path) path = circle (100);
+
+return false;
+} // if circle
 
 if (e.keyCode >= 35 && e.keyCode <= 40) {
 console.log ("change position:", e.key, position);
@@ -89,38 +99,24 @@ return false;
 
 return true;
 
-// -- X --
-function increaseX (p) {
-p[0] += delta;
-return p;
-} // increaseX
+function circle () {
+var x,y,z, r,a,deltaA;
 
-function decreaseX (p) {
-p[0] -= delta;
-return p;
-} // decreaseX
+a = 0;
+r = 25;
+deltaA = .02;
+y = 0;
 
-// -- y --
-function increaseY () {
-p[1] += delta;
-return p;
-} // increaseY
+return setInterval (function () {
+x = r * Math.cos(a);
+z = r * Math.sin(a);
+panner.position ("position", [x,y,z]);
+a += deltaA;
+if (a > Math.PI*2) a -= Math.PI*2;
 
-function decreaseY () {
-p[1] -= delta;
-return p;
-} // decreaseY
+}, 10);
 
-// -- Z --
-function increaseZ () {
-p[2] += delta;
-return p;
-} // increaseZ
-
-function decreaseZ () {
-p[2] -= delta;
-return p;
-} // decreaseZ
+} // circle
 
 }); // arrow keys change position
 

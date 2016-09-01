@@ -35,12 +35,12 @@ console.log ("Panner initialized");
 function getPosition () {return position;}
 
 function setPosition (name, value) {
-console.log ("setting position ", typeof(value), value, typeof(position), position, distance(position,value));
+//console.log ("setting position ", typeof(value), value, typeof(position), position, distance(position,value));
 if (distance (position,  value) < epsilon) return false;
 
 position = value.slice(); // need to copy
 panner.setPosition.apply (panner, position);
-console.log (`setPosition: ${position}`);
+//console.log (`setPosition: ${position}`);
 return true;
 } // setPosition
 
