@@ -8,11 +8,19 @@ I started this project to learn browserify.  Its also a fun little UI builder fo
 
 Build simple UI from tuna modules:
 - extends parameter descriptions of Tuna modules via tunaModule.defaults 
-	+all modules provide a bypass control, and a list of floating point parameters with min, max, and default value
-	+ we use this list and a simple mustache template to build a simple and accessible UI
-	+ all parameters operable from either keyboard or mouse (use standard `input type="range"` controls)
-	+ parameters can be grouped using group numbers in their description
-+ controlType is used to specify what type of `input` control to use (best guess depending on `type` which is supported natively in all Tuna modules)
+	+all modules provide a bypass control, and a list of floating point parameters with min, max, step, controlType, and default value
+	+ all parameters operable from either keyboard or mouse (use standard `input type="range"`, `type="checkbox"`, or `button` controls)
+	+parameters can be grouped using group numbers in their description
+- we use this list and a mustache template to build a simple and accessible UI
+	+ changes to model cause UI to update
+	+ changes in UI cause model to update
+
+## Modifications to "tuna.js"
+
+- expose `Super` as property on `Tuna` constructor
+- exposed audio context as property of `Super`
+- modified `Super.connect` and `Super.disconnect` to return target
+- `activateCallback` is always called when `Super.activate` is called (argument reflects state of node)
 
 
 ## Tools
