@@ -3,50 +3,36 @@
 <head>
 <meta charset="utf-8">
 <title>Tuna Demo</title>
-
-<script src="jquery.min.js"></script>
-<script src="tuna.min.js"></script>
+<style>
+.eq [orient=vertical] {float: left; padding-right: 7px;}
+</style>
 </head>
 <body>
 <h1>Tuna!</h1>
 
 <div class="source">
 <label>Source: <input id="source" type="text" accesskey="s"></label>
-<audio id="player" src="../7.m4a" controls accesskey="p">
+<audio id="player" controls accesskey="p">
 </audio>
 </div>
 <hr>
 <div class="tuna" id="tuna">
+<div class="eq">
+</div>
 
+<div class="panner">
+</div>
+
+<div class="spread">
+</div>
+
+<div class="reverb">
+</div>
 </div>
 
 
-<script src="tunaModel.js"></script>
-<script src="tunaUi.js"></script>
-
-<script>
-var audioElement = $("#player")[0];
-var audio = new AudioContext ();
-var tuna = new Tuna (audio);
-
-var source = audio.createMediaElementSource (audioElement);
-var reverb = new TunaModel (new tuna.Convolver({impulse: "impulse.wav"}));
-var ui;
-
-ui = new TunaUi (reverb);
-ui.render ($(".tuna"));
-reverb.set ("wetLevel", .1);
-
-source.connect (reverb.model);
-reverb.model.connect (audio.destination);
-audioElement.play ();
-
-$("#source").on ("change", function (e) {
-$(audioElement).attr ("src", $(e.target).val());
-return false;
-});
-</script>
-
+<script src="sources/tuna.js"></script>
+<script src="tunaDemo.bundle.js"></script>
 
 </body>
 </html>

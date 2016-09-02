@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build": "browserify --standalone TunaModel sources/tunaModel.js -o dist/tunaModel.js && browserify --standalone TunaUi sources/tunaUi.js -t  browserify-hogan sources/tunaUi.js -o dist/tunaUi.js",
+    "build": "browserify tunaDemo.js -t browserify-hogan  -o dist/tunaDemo.bundle.js",
     "watch": "watchify  tunaDemo.js -t browserify-hogan  -o tunaDemo.bundle.js --verbose --debug",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
