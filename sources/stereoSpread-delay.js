@@ -1,9 +1,10 @@
+"use strict";
 // crosstalk cancelation using delay lines
 
 Tuna.prototype.StereoSpread = function StereoSpread (properties) {
 var self = this;
 var mix, delay;
-var invertLeft, invertRight, fLeft, fRight, passThrough, split, merge;
+var invertLeft, invertRight, dLeft, dRight, passThrough, split, merge;
 if (!properties) {
 properties = this.getDefaults();
 }

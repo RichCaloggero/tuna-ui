@@ -1,10 +1,11 @@
+"use strict";
 var epsilon = Number.EPSILON;
 var pannerOptions = {
 panningModel: "HRTF",
 distanceModel: "linear",
 refDistance: 10,
 maxDistance: 100,
-rolloffFactor: .1
+rolloffFactor: .5
 }; // pannerOptions
 
 Tuna.prototype.Panner = function Panner () {

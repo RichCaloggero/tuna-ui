@@ -11,8 +11,8 @@
 <h1>Tuna!</h1>
 
 <div class="source">
-<label>Source: <input id="source" type="text" accesskey="s"></label>
-<audio id="player" controls accesskey="p">
+<label>Source: <input id="source" type="text" accesskey="s" value="9.m4a"></label>
+<audio id="player" src="9.m4a" volume=".03" controls accesskey="p">
 </audio>
 </div>
 <hr>
@@ -31,8 +31,13 @@
 </div>
 
 
+<script src="jquery.min.js"></script>
+<script src="debug.js"></script>
 <script src="sources/tuna.js"></script>
 <script src="tunaDemo.bundle.js"></script>
+
+<div id="debug" aria-live="polite" role="region" aria-label="debug">
+</div>
 
 </body>
 </html>
