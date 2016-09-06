@@ -17,7 +17,8 @@ this.input.connect (this.inputGain);
 this.outputGain.connect (this.output);
 
 // add properties to defaults for UI generator
-bands.forEach (function (band) {
+var keymap = "1234567890";
+bands.forEach (function (band, index) {
 // the name of each band is its frequency (exposed as a numeric property)
 this.defaults[band.frequency] = {
 controlType: "range",
@@ -26,7 +27,8 @@ min: properties.bandMinGain || -30.0,
 max: properties.bandMaxGain || 30.0,
 step: 1.0,
 orientation: "vertical", // not currently used
-orient: 'orient="vertical"', // for firefox
+accesskey: (keymap[index])? `accesskey=${keymap[index]}` : undefined,
+orient: 'orient=vertical', // for firefox
 function: setBand.bind(this),
 group: 1,
 type: "float"
