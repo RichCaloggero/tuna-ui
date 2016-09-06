@@ -157,16 +157,16 @@ if (a > Math.PI*2) a -= Math.PI*2;
 
 } // circle
 
-function cylinder (_r, _h) {
+function cylinder (options) {
 var x,y,z, r,h, a,deltaA;
 var twoPi = 2 * Math.PI;
 var pointCount = 0;
-console.log ("initializing cylinder", twoPi);
+console.log ("initializing cylinder");
 
-r = _r || 33.33;
-h = _h || 50;
+r = options.r || 33.33;
+h = options.h || 50;
 a = 0;
-deltaA = .02;
+deltaA = options.deltaA || .02;
 y = -h/2;
 
 return setInterval (function () {
@@ -176,7 +176,6 @@ z = r * Math.sin(a);
 
 panner.position ("position", [x,y,z]);
 
-pointCount += 1;
 
 // update
 a += deltaA;
@@ -184,44 +183,36 @@ if (a > twoPi) {
 a -= twoPi;
 y += delta;
 if (y > h/2) y = -h/2;
-pointCount = 0;
-console.log ("...");
 } // if
-}, 10);
+}, options.t || 10);
 
 } // cylinder
 
-function sphere (_r) {
+function sphere (options) {
 var x,y,z, r,r0, a,a0,deltaA;
 var twoPi = 2 * Math.PI;
-var pointCount = 0;
-console.log ("initializing sphere");
+console.log ("initializing cylinder");
 
-r = _r || 33.33;
-a = a0 = 0;
-deltaA = .1 * delta;
-a0 = deltaA;
-r0 = r * Math.sin (a0);
+r = options.r || 33.33;
+deltaA = options.deltaA || .02;
+a = deltaA;
+y = -r;
+r0 = r * Math.sin (a);
 
 return setInterval (function () {
 x = r0 * Math.cos(a);
 z = r0 * Math.sin(a);
-y = -r * Math.cos(a0);
-panner.position ("position", [x,y,z]);
 
-if (pointCount <= 10) console.log (`- first: ${round(x,2)} ${round(y,2)} ${round(z,2)}`);
-pointCount += 1;
+panner.position ("position", [x,y,z]);
 
 // update
 a += deltaA;
 if (a > twoPi) {
 a -= twoPi;
-a0 += deltaA;
-r0 = r * Math.sin (a0);
-pointCount = 0;
-console.log ("...");
+y = r * Math.sin(a);
+if (y > r) y = -r;
 } // if
-}, 10);
+}, options.t || 10);
 
 } // sphere
 
