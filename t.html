@@ -7,11 +7,11 @@
 <script src="debug.js"></script>
 </head>
 <body>
-<input type="text">
+<input type="text" role="application" title="press key">
 
 <script>
 $("input").on ("keydown", function (e) {
-debug ("key: ", e.key, e.ctrlKey, e.shiftKey, e.char, e.keyCode);
+debug (`key: ${e.key}, control=${e.ctrlKey}, shift=${e.shiftKey}, alt=${e.altKey}, char=${e.char}, keyCode=${e.keyCode}`);
 return true;
 });
 </script>

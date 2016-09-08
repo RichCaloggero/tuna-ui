@@ -56,55 +56,29 @@ $(".panner [data-name=position]")
 .attr ("role", "application")
 .on ("keydown", function (e) {
 var key = e.key.toLowerCase();
+var position = [];
 var commands = {
 delete: function () {if (path) path = clearInterval(path);},
+enter: function (value) {panner.position ("position", stringToPosition(value)); return 0;},
 
-c: circle,
-s: sphere,
-y: cylinder
+c: function (value) {return circle (stringToOptions(value));},
+s: function (value) {return sphere(stringToOptions(value));},
+y: function (value) {return cylinder(stringToOptions(value));}
 }; // commands
 
-var value;
 
 if (e.ctrlKey && key in commands) {
-value = $(e.target).val().split(",");
-if (value.length === 3 && value.indexOf(":") === -1) value = value.map ((x) => Number(x));
-else value = new Function ("return {" + value.join(',') + "};") ();
+path = clearInterval (path);
+path = commands[key] ( $(e.target).val() );
 
-console.log ("value: ", value);
-console.log ("command: ", e.key, e.ctrlKey);
-
-if (value instanceof Array) panner.position ("position", value);
-else path = commands[key] (value);
 return false;
 } // if
 
-/*if (e.key.toLowerCase() === "c") {
-if (e.shiftKey && path) path = clearInterval (path);
-else if (! path) path = circle (100);
 
-return false;
-} // if circle
+if (e.altKey && (e.keyCode >= 35 && e.keyCode <= 40)) {
+position = panner.getPosition ();
 
-if (e.key.toLowerCase() === "y") {
-if (e.shiftKey && path) path = clearInterval (path);
-else if (! path) path = cylinder (100, 50);
-
-return false;
-} // if cylinder
-
-if (e.key.toLowerCase() === "s") {
-if (e.shiftKey && path) path = clearInterval (path);
-else if (! path) path = sphere (100);
-
-return false;
-} // if sphere
-*/
-
-/*if (e.keyCode >= 35 && e.keyCode <= 40) {
-console.log ("change position:", e.key, position);
-
-switch (key) {
+switch (e.key) {
 case "ArrowUp":
 if (e.ctrlKey) position[1] += delta;
 else position[2] += delta;
@@ -123,10 +97,12 @@ case "ArrowLeft":
 position[0] -= delta;
 break;
 
-case "Home": panner.set ("position", 0,0,0);
+case "Home": position = [0,0,0];
 break;
 } // switch
 
+//debug ("change position:", e.key, position);
+return false;
 $(e.target).val (position.map((x) => round(x,2)).join(","));
 setTimeout (function () {
 $(e.target).trigger ("change");
@@ -134,7 +110,6 @@ $(e.target).trigger ("change");
 
 return false;
 } // if
-*/
 
 return true;
 
@@ -256,4 +231,12 @@ function _round (x,n) {
 var m = Math.pow(10,n);
 return Math.round(x*m) / m;
 } // round
+
+function stringToPosition (value) {
+return value.split(",").map ((x) => Number(x));
+} // stringToPosition
+
+function stringToOptions (value) {
+return new Function ("return {" + value + "};") ();
+} // stringToOptions
 
