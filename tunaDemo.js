@@ -1,5 +1,5 @@
 "use strict";
-var delta = 0.1;
+var delta = 1;
 var path = null;
 var GraphicEqualizer = require ("./sources/graphicEqualizer");
 var StereoSpread = require ("./sources/stereoSpread-delay");
@@ -76,7 +76,7 @@ return false;
 
 
 if (e.altKey && (e.keyCode >= 35 && e.keyCode <= 40)) {
-position = panner.getPosition ();
+position = panner.getPosition ().slice();
 
 switch (e.key) {
 case "ArrowUp":
@@ -102,11 +102,8 @@ break;
 } // switch
 
 //debug ("change position:", e.key, position);
-return false;
-$(e.target).val (position.map((x) => round(x,2)).join(","));
-setTimeout (function () {
-$(e.target).trigger ("change");
-}, 50);
+panner.position("position", position);
+$(e.target).val ( round.apply (null, Array.concat([2], position)).join(","));
 
 return false;
 } // if

@@ -11,12 +11,13 @@
 
 <script>
 $("input").on ("keydown", function (e) {
+if (e.keyCode === 0) return true;
 debug (`key: ${e.key}, control=${e.ctrlKey}, shift=${e.shiftKey}, alt=${e.altKey}, char=${e.char}, keyCode=${e.keyCode}`);
 return true;
 });
 </script>
 
-<div id="debug" aria-live="polite">
+<div tabindex="0" id="debug" aria-live="polite">
 </div>
 
 </body>

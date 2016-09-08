@@ -41,7 +41,7 @@ if (distance (position,  value) < epsilon) return false;
 
 position = value.slice(); // need to copy
 panner.setPosition.apply (panner, position);
-//console.log (`setPosition: ${position}`);
+//debug(`panner.setPosition: ${position}`);
 return true;
 } // setPosition
 
