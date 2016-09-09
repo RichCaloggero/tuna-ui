@@ -1,4 +1,6 @@
 "use strict";
+
+
 let ns = new WeakMap();
 
 let internal = function (object) {
