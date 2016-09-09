@@ -201,10 +201,12 @@ return typeof(userVal) === "undefined" ? defaultVal : userVal;
 } // initValue
 
 
-Tuna.prototype.Bitcrusher = function(properties) {
+Tuna.prototype.Bitcrusher = class extends Super {
+constructor (properties) {
+super ();
 if (!properties) {
 properties = this.getDefaults();
-}
+} // if
 this.bufferSize = properties.bufferSize || this.defaults.bufferSize.value;
 
 this.input = userContext.createGain();
@@ -215,9 +217,9 @@ this.output = userContext.createGain();
 this.activateNode.connect(this.processor);
 this.processor.connect(this.output);
 
-var phaser = 0,
-last = 0,
-input, output, step, i, length;
+var phaser = 0;
+var last = 0;
+var input, output, step, i, length;
 this.processor.onaudioprocess = function(e) {
 input = e.inputBuffer.getChannelData(0),
 output = e.outputBuffer.getChannelData(0),
@@ -228,15 +230,16 @@ phaser += this.normfreq;
 if (phaser >= 1.0) {
 phaser -= 1.0;
 last = step * Math.floor(input[i] / step + 0.5);
-}
+} // if
 output[i] = last;
-}
-};
+} // for
+}; // this.processor.onaudioprocess
 
 this.bits = properties.bits || this.defaults.bits.value;
 this.normfreq = initValue(properties.normfreq, this.defaults.normfreq.value);
 this.bypass = properties.bypass || false;
-};
+}; // bitcrusher
+
 Tuna.prototype.Bitcrusher.prototype = Object.create(Super, {
 name: {
 value: "Bitcrusher"
