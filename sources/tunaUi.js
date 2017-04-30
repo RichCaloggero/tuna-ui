@@ -81,9 +81,10 @@ parameter.group = parameter.group || 0;
 if (! parameter.type) parameter.type = "string";
 
 if (! parameter.controlType) {
-if (parameter.type == "float" || !Number.isNaN(parameter.value)) {parameter.controlType = "range";}
+if (parameter.type === "float" || !Number.isNaN(parameter.value)) {parameter.controlType = "range";}
 else if (parameter.type === "boolean") {parameter.controlType = "checkbox";}
 else if (parameter.type === "string") {parameter.controlType = "text";}
+else if (parameter.type === "list" || parameter.value instanceof Array) parameter.controlType = "list";
 } // if
 
 if (parameter.type === "float" && parameter.controlType === "range") parameter.step = parameter.step || .1;

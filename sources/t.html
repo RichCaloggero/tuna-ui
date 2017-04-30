@@ -1,0 +1,59 @@
+<!doctype html>
+<head>
+<meta charset="utf-8">
+<title>Test</title>
+</head>
+<body>
+<h1>Test</h1>
+<div id="message" aria-live="polite" role="region" aria-label="status">
+</div>
+
+<div>
+<label>frequency <input id="freq" type="range" min="100.0" max="8000.0" step="10.0"></label>
+<label>Q <input id="q" type="range" min="0.1" max="16.0" step="0.2"></label>
+</div>
+
+<script>
+var audio = new AudioContext();
+var audioPlayer = new Audio();
+var audioSource = audio.createMediaElementSource(audioPlayer);
+var f = audio.createBiquadFilter ();
+var split = audio.createChannelSplitter(2);
+var merge = audio.createChannelMerger(2);
+var _freq = document.querySelector ("#freq");
+var _q = document.querySelector ("#q");
+
+document.querySelector("body").appendChild(audioPlayer);
+audioPlayer.src = "music.mp3";
+audioPlayer.controls = true;
+f.type = "allpass";
+
+audioSource.connect (split);
+split.connect (f,0);
+
+f.connect (merge, 0,0);
+split.connect (merge, 1,1);
+merge.connect (audio.destination);
+
+f.frequency.value = 1000.0;
+f.Q.value = 0.1;
+
+_freq.addEventListener ("change", () => {
+f.frequency.value = _freq.value;
+//message ("frequency: " + _freq.value);
+});
+
+_q.addEventListener ("change", () => {
+f.Q.value = _q.value;
+//message ("q: " + _q.value);
+});
+
+function message (text) {
+document.querySelector ("#message").innerHTML = text;
+} // message
+
+
+</script>
+
+</body>
+</html>
